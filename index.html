@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You Glow Girl — Your BFF in a Text</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FDFAF5;
+    --warm-white: #FFF8F0;
+    --blush: #FDEEE6;
+    --peach: #F8D5C2;
+    --coral: #E8714A;
+    --deep-coral: #C4512E;
+    --gold: #E8A830;
+    --lavender: #EDE8F8;
+    --violet: #7B5EA7;
+    --sage: #8AAF96;
+    --deep-sage: #4A7A5C;
+    --ink: #1C1410;
+    --muted: #7A6658;
+    --light-muted: #C4AFA6;
+    --border: #EDE3DC;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-sans); background: var(--cream); color: var(--ink); font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: flex; flex-direction: column; }
+
+  /* ── NAV ── */
+  nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--warm-white);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo {
+    font-family: var(--font-serif); font-size: 1.45rem; font-weight: 700; font-style: italic;
+    background: linear-gradient(135deg, var(--coral), var(--gold));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    letter-spacing: -0.01em;
+  }
+  .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+  .nav-link { font-size: 0.85rem; font-weight: 400; color: var(--muted); background: none; border: none; cursor: pointer; transition: color 0.2s; font-family: var(--font-sans); }
+  .nav-link:hover { color: var(--ink); }
+  .nav-cta { font-size: 0.82rem; font-weight: 600; padding: 0.55rem 1.4rem; background: var(--coral); color: #fff; border: none; border-radius: 100px; cursor: pointer; font-family: var(--font-sans); transition: background 0.2s, transform 0.15s; }
+  .nav-cta:hover { background: var(--deep-coral); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 5rem 2rem 3.5rem; text-align: center;
+    background: var(--warm-white); position: relative; overflow: hidden;
+  }
+  .hero-blob1 { position: absolute; top: -100px; right: -100px; width: 520px; height: 520px; background: radial-gradient(circle, #FDEEE6 0%, transparent 65%); border-radius: 50%; pointer-events: none; }
+  .hero-blob2 { position: absolute; bottom: -60px; left: -60px; width: 360px; height: 360px; background: radial-gradient(circle, #EDE8F8 0%, transparent 65%); border-radius: 50%; pointer-events: none; }
+  .hero-blob3 { position: absolute; top: 40%; left: 20%; width: 200px; height: 200px; background: radial-gradient(circle, #FFF3D6 0%, transparent 65%); border-radius: 50%; pointer-events: none; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.78rem; letter-spacing: 0.14em; font-weight: 600;
+    color: var(--coral); text-transform: uppercase; margin-bottom: 1.5rem;
+    background: var(--blush); padding: 0.4rem 1rem; border-radius: 100px;
+    position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-family: var(--font-serif); font-size: clamp(2.8rem, 6.5vw, 5.2rem);
+    font-weight: 400; line-height: 1.1; color: var(--ink); position: relative; z-index: 1;
+  }
+  .hero h1 em { font-style: italic; color: var(--coral); }
+  .hero h1 strong { font-weight: 700; }
+  .hero-sub { font-size: 1.05rem; color: var(--muted); max-width: 500px; margin: 1.5rem auto 0.75rem; line-height: 1.75; font-weight: 300; position: relative; z-index: 1; }
+  .hero-disclaimer { font-size: 0.82rem; color: var(--light-muted); font-style: italic; margin-bottom: 2.5rem; position: relative; z-index: 1; }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; }
+
+  .btn-primary { padding: 0.9rem 2.4rem; background: var(--coral); color: #fff; border: none; border-radius: 100px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: var(--font-sans); transition: transform 0.15s, background 0.2s; }
+  .btn-primary:hover { background: var(--deep-coral); transform: translateY(-2px); }
+  .btn-ghost { padding: 0.9rem 2.4rem; background: transparent; color: var(--ink); border: 1.5px solid var(--border); border-radius: 100px; font-size: 0.95rem; font-weight: 400; cursor: pointer; font-family: var(--font-sans); transition: border-color 0.2s; }
+  .btn-ghost:hover { border-color: var(--muted); }
+
+  /* ── PHONE MOCKUPS ── */
+  .phone-mockup { margin-top: 4rem; position: relative; z-index: 1; display: flex; gap: 1.25rem; align-items: flex-end; justify-content: center; }
+  .phone { width: 210px; background: #1A1A1A; border-radius: 30px; padding: 18px 16px; box-shadow: 0 28px 70px rgba(28,20,16,0.2), 0 0 0 1px rgba(255,255,255,0.05); }
+  .phone-notch { width: 60px; height: 6px; background: #333; border-radius: 3px; margin: 0 auto 12px; }
+  .phone-screen { background: #F5F5F5; border-radius: 18px; padding: 14px; min-height: 160px; }
+  .phone-time { font-size: 11px; color: #888; text-align: center; margin-bottom: 10px; font-weight: 500; }
+  .phone-notif { background: #fff; border-radius: 14px; padding: 11px 13px; box-shadow: 0 3px 14px rgba(0,0,0,0.1); }
+  .notif-header { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .notif-dot { width: 16px; height: 16px; border-radius: 4px; background: linear-gradient(135deg, var(--coral), var(--gold)); flex-shrink: 0; }
+  .notif-app { font-size: 10px; font-weight: 600; color: #333; }
+  .notif-time { font-size: 9px; color: #aaa; margin-left: auto; }
+  .notif-msg { font-size: 12px; line-height: 1.55; color: #333; font-weight: 400; }
+  .phone.phone-left { width: 185px; opacity: 0.7; transform: translateY(20px) rotate(-3deg); }
+  .phone.phone-right { width: 185px; opacity: 0.7; transform: translateY(20px) rotate(3deg); }
+
+  /* ── BFF SECTION ── */
+  #bff { background: linear-gradient(160deg, #1C1410 0%, #2E1F17 100%); }
+  .bff-inner { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+  .bff-text .section-label { color: var(--peach); }
+  .bff-text .section-title { color: #FFF8F0; }
+  .bff-text .section-title em { color: var(--coral); }
+  .bff-text p { color: rgba(255,248,240,0.7); font-size: 0.95rem; line-height: 1.8; font-weight: 300; margin-bottom: 1.25rem; }
+  .bff-perks { display: flex; flex-direction: column; gap: 1rem; }
+  .bff-perk { display: flex; gap: 1rem; align-items: flex-start; }
+  .bff-perk-icon { width: 36px; height: 36px; border-radius: 10px; background: rgba(232,113,74,0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .bff-perk-text h4 { font-size: 0.9rem; font-weight: 600; color: #FFF8F0; margin-bottom: 0.25rem; }
+  .bff-perk-text p { font-size: 0.82rem; color: rgba(255,248,240,0.55); margin: 0; line-height: 1.5; }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 5.5rem 2rem; }
+  .section-inner { max-width: 940px; margin: 0 auto; }
+  .section-label { font-size: 0.72rem; letter-spacing: 0.18em; font-weight: 600; color: var(--coral); text-transform: uppercase; margin-bottom: 0.75rem; }
+  .section-title { font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; line-height: 1.2; color: var(--ink); margin-bottom: 1.5rem; }
+  .section-title em { font-style: italic; color: var(--coral); }
+
+  /* ── HOW IT WORKS ── */
+  #how { background: var(--cream); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem; }
+  .step-num { font-family: var(--font-serif); font-size: 3.5rem; font-weight: 700; color: var(--peach); line-height: 1; margin-bottom: 0.75rem; }
+  .step h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--ink); }
+  .step p { font-size: 0.875rem; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+  /* ── SAMPLE MESSAGES (iMessage style) ── */
+  #messages { background: var(--warm-white); }
+  .message-showcase { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+  .imessage-card { background: #F5F5F5; border-radius: 22px; padding: 1.25rem; overflow: hidden; }
+  .imessage-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #E0E0E0; }
+  .imessage-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, var(--coral), var(--gold)); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .imessage-name { font-size: 0.85rem; font-weight: 600; color: #1C1C1E; }
+  .imessage-subtitle { font-size: 0.72rem; color: #888; }
+  .imessage-time { font-size: 0.7rem; color: #999; text-align: center; margin-bottom: 0.75rem; }
+  .bubble { display: inline-block; padding: 10px 14px; border-radius: 18px; font-size: 0.88rem; line-height: 1.5; max-width: 88%; margin-bottom: 4px; }
+  .bubble-in { background: #E9E9EB; color: #1C1C1E; border-bottom-left-radius: 4px; display: block; }
+  .bubble-reaction { font-size: 0.75rem; color: #888; margin-top: 4px; padding-left: 4px; }
+  .msg-tag-chip { display: inline-block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.25rem 0.65rem; border-radius: 100px; background: var(--blush); color: var(--coral); margin-bottom: 0.75rem; }
+
+  /* ── PRICING ── */
+  #pricing { background: var(--cream); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .plan { background: var(--warm-white); border: 1.5px solid var(--border); border-radius: 24px; padding: 2rem 1.75rem; display: flex; flex-direction: column; transition: transform 0.2s; }
+  .plan:hover { transform: translateY(-4px); }
+  .plan.featured { background: var(--ink); border-color: var(--ink); }
+  .plan-badge { display: inline-block; font-size: 0.7rem; letter-spacing: 0.1em; font-weight: 600; text-transform: uppercase; padding: 0.3rem 0.85rem; border-radius: 100px; margin-bottom: 1.25rem; width: fit-content; }
+  .badge-spark { background: #E8F4ED; color: var(--deep-sage); }
+  .badge-circle { background: #fff; color: var(--coral); }
+  .badge-thrive { background: var(--blush); color: var(--deep-coral); }
+  .plan-name { font-family: var(--font-serif); font-size: 1.7rem; font-weight: 700; font-style: italic; color: var(--ink); margin-bottom: 0.2rem; }
+  .plan.featured .plan-name { color: var(--cream); }
+  .plan-tagline { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.5rem; font-weight: 300; }
+  .plan.featured .plan-tagline { color: rgba(253,250,245,0.6); }
+  .plan-price { font-family: var(--font-serif); font-size: 3rem; font-weight: 700; color: var(--ink); line-height: 1; }
+  .plan.featured .plan-price { color: #fff; }
+  .plan-price sub { font-size: 1rem; font-weight: 400; font-family: var(--font-sans); }
+  .plan-annual { font-size: 0.75rem; color: var(--sage); margin: 0.3rem 0 1.5rem; font-weight: 500; }
+  .plan-divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+  .plan.featured .plan-divider { border-color: rgba(255,255,255,0.12); }
+  .plan-features { list-style: none; flex: 1; margin-bottom: 1.75rem; }
+  .plan-features li { font-size: 0.85rem; color: var(--muted); padding: 0.45rem 0; display: flex; gap: 0.7rem; align-items: flex-start; line-height: 1.5; font-weight: 300; }
+  .plan.featured .plan-features li { color: rgba(253,250,245,0.75); }
+  .plan-features li::before { content: '✦'; color: var(--coral); font-size: 0.65rem; flex-shrink: 0; margin-top: 3px; }
+  .plan.featured .plan-features li::before { color: var(--peach); }
+  .plan-btn { width: 100%; padding: 0.9rem; border-radius: 100px; font-size: 0.88rem; font-weight: 600; cursor: pointer; font-family: var(--font-sans); transition: all 0.2s; }
+  .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--muted); }
+  .btn-coral { background: var(--coral); color: #fff; border: none; }
+  .btn-coral:hover { background: var(--deep-coral); }
+  .btn-white { background: #fff; color: var(--ink); border: none; }
+  .btn-white:hover { background: var(--cream); }
+
+  /* ── BACKEND SECTION ── */
+  #backend { background: var(--lavender); }
+  .backend-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 2.5rem; }
+  .backend-card { background: #fff; border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(123,94,167,0.15); }
+  .backend-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+  .backend-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; }
+  .backend-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; font-weight: 300; }
+  .backend-card .tech { font-size: 0.72rem; font-weight: 600; color: var(--violet); background: var(--lavender); padding: 0.2rem 0.6rem; border-radius: 100px; display: inline-block; margin-top: 0.75rem; }
+
+  /* ── MODAL ── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(28,20,16,0.55); z-index: 500; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(2px); }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--warm-white); border-radius: 28px; padding: 2.5rem; max-width: 490px; width: 100%; position: relative; max-height: 92vh; overflow-y: auto; }
+  .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: var(--border); border: none; cursor: pointer; font-size: 1rem; color: var(--muted); line-height: 1; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+  .modal-close:hover { background: var(--peach); }
+  .modal-step { display: none; }
+  .modal-step.active { display: block; }
+  .modal-eyebrow { font-size: 0.72rem; letter-spacing: 0.14em; font-weight: 600; color: var(--coral); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .modal h2 { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 700; color: var(--ink); margin-bottom: 0.5rem; line-height: 1.25; }
+  .modal p.sub { font-size: 0.875rem; color: var(--muted); margin-bottom: 2rem; font-weight: 300; line-height: 1.65; }
+  .form-group { margin-bottom: 1.25rem; }
+  .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; }
+  .form-input { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--border); border-radius: 12px; background: var(--cream); color: var(--ink); font-family: var(--font-sans); font-size: 0.9rem; font-weight: 400; outline: none; transition: border-color 0.2s; }
+  .form-input:focus { border-color: var(--coral); }
+  .pill-group { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .pill { padding: 0.45rem 1rem; border-radius: 100px; font-size: 0.8rem; font-weight: 500; border: 1.5px solid var(--border); background: var(--cream); color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: var(--font-sans); user-select: none; }
+  .pill.selected { background: var(--coral); color: #fff; border-color: var(--coral); }
+  .modal-footer { display: flex; gap: 1rem; margin-top: 2rem; align-items: center; }
+  .modal-back { background: none; border: none; color: var(--muted); font-size: 0.85rem; cursor: pointer; font-family: var(--font-sans); font-weight: 400; padding: 0; transition: color 0.2s; }
+  .modal-back:hover { color: var(--ink); }
+  .modal-next { flex: 1; padding: 0.9rem; background: var(--coral); color: #fff; border: none; border-radius: 100px; font-size: 0.92rem; font-weight: 600; cursor: pointer; font-family: var(--font-sans); transition: background 0.2s; }
+  .modal-next:hover { background: var(--deep-coral); }
+  .progress-dots { display: flex; gap: 7px; justify-content: center; margin-bottom: 2rem; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); transition: all 0.2s; }
+  .dot.active { background: var(--coral); width: 20px; border-radius: 4px; }
+  .confirm-icon { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--blush), var(--lavender)); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; font-size: 2rem; }
+  .confirm-preview { background: #F5F5F5; border-radius: 18px; padding: 1.25rem; margin: 1.5rem 0; }
+  .preview-label { font-size: 0.7rem; color: #999; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .preview-bubble { background: #E9E9EB; color: #1C1C1E; border-radius: 18px; border-bottom-left-radius: 4px; padding: 12px 16px; font-size: 0.9rem; line-height: 1.55; display: inline-block; max-width: 100%; }
+
+  /* ── DASHBOARD ── */
+  #screen-dashboard { background: var(--cream); }
+  .dash-header { background: var(--warm-white); border-bottom: 1px solid var(--border); padding: 1.1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .dash-logo { font-family: var(--font-serif); font-size: 1.35rem; font-weight: 700; font-style: italic; background: linear-gradient(135deg, var(--coral), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .dash-plan-badge { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; padding: 0.35rem 0.9rem; border-radius: 100px; background: var(--blush); color: var(--coral); }
+  .dash-plan-badge.founding { background: #FFF3D6; color: #854F0B; }
+  .dash-body { max-width: 860px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+  .dash-greeting { font-family: var(--font-serif); font-size: 2.2rem; font-weight: 400; color: var(--ink); margin-bottom: 0.25rem; }
+  .dash-greeting em { font-style: italic; color: var(--coral); }
+  .dash-sub { font-size: 0.875rem; color: var(--muted); margin-bottom: 2.5rem; font-weight: 300; }
+  .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+  .dash-card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; }
+  .dash-card.full { grid-column: 1 / -1; }
+  .dash-card-label { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--light-muted); font-weight: 600; margin-bottom: 0.85rem; }
+  .today-bubble { background: #E9E9EB; color: #1C1C1E; border-radius: 18px; border-bottom-left-radius: 4px; padding: 14px 18px; font-size: 1rem; line-height: 1.6; display: inline-block; max-width: 90%; }
+  .today-meta { font-size: 0.75rem; color: var(--light-muted); margin-top: 0.75rem; font-weight: 300; }
+  .profile-list { list-style: none; }
+  .profile-list li { display: flex; justify-content: space-between; font-size: 0.83rem; padding: 0.45rem 0; border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 300; }
+  .profile-list li:last-child { border-bottom: none; }
+  .profile-list li span { color: var(--ink); font-weight: 500; }
+  .streak-row { display: flex; gap: 5px; margin-top: 0.75rem; }
+  .streak-day { flex: 1; height: 8px; border-radius: 4px; background: var(--border); }
+  .streak-day.done { background: linear-gradient(90deg, var(--coral), var(--gold)); }
+  .streak-label { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; font-weight: 300; }
+  .upgrade-banner { background: linear-gradient(135deg, #1C1410 0%, #2E1F17 100%); border-radius: 20px; padding: 1.75rem 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .upgrade-text h3 { font-family: var(--font-serif); font-size: 1.3rem; color: var(--cream); font-weight: 700; font-style: italic; margin-bottom: 0.3rem; }
+  .upgrade-text p { font-size: 0.83rem; color: rgba(253,250,245,0.6); font-weight: 300; }
+  .btn-upgrade { padding: 0.75rem 1.6rem; background: var(--coral); color: #fff; border: none; border-radius: 100px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: var(--font-sans); white-space: nowrap; transition: background 0.2s; }
+  .btn-upgrade:hover { background: var(--deep-coral); }
+
+  /* ── FOOTER ── */
+  footer { background: var(--ink); color: rgba(253,250,245,0.55); padding: 3rem 2rem; text-align: center; font-size: 0.82rem; font-weight: 300; line-height: 1.8; }
+  .footer-logo { font-family: var(--font-serif); font-size: 1.7rem; font-style: italic; font-weight: 700; background: linear-gradient(135deg, var(--coral), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.75rem; }
+  footer a { color: var(--peach); text-decoration: none; }
+
+  @media (max-width: 680px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links .nav-link { display: none; }
+    .bff-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .phone.phone-left, .phone.phone-right { display: none; }
+    .dash-grid { grid-template-columns: 1fr; }
+    .dash-grid .full { grid-column: auto; }
+    section { padding: 3.5rem 1.25rem; }
+    .modal { padding: 1.75rem; border-radius: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════ LANDING ═══════ -->
+<div id="screen-landing" class="screen active">
+  <nav>
+    <span class="nav-logo">You Glow Girl</span>
+    <div class="nav-links">
+      <button class="nav-link" onclick="scrollTo('#bff')">Why YGG?</button>
+      <button class="nav-link" onclick="scrollTo('#messages')">Sample texts</button>
+      <button class="nav-link" onclick="scrollTo('#pricing')">Pricing</button>
+      <button class="nav-cta" onclick="openModal()">Claim founding spot 🔥</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-blob1"></div>
+    <div class="hero-blob2"></div>
+    <div class="hero-blob3"></div>
+    <p class="hero-eyebrow">✨ your new favorite text</p>
+    <h1>The BFF you didn't know<br>you <em>needed</em> in your phone</h1>
+    <p class="hero-sub">Personalized daily texts that hype you up, check in on you, and never ask anything in return. No read receipts. No guilt. Just good vibes, delivered.</p>
+    <p class="hero-disclaimer">For every woman — moms, non-moms, figuring-it-out moms. All of us.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="openModal()">Get your free texts 🙌</button>
+      <button class="btn-ghost" onclick="scrollTo('#messages')">See what she says</button>
+    </div>
+    <div class="phone-mockup">
+      <div class="phone phone-left">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-time">8:14 AM</div>
+          <div class="phone-notif">
+            <div class="notif-header"><div class="notif-dot"></div><span class="notif-app">You Glow Girl</span><span class="notif-time">now</span></div>
+            <div class="notif-msg">Okay but have you eaten actual food today? Not just coffee. I'm watching you. 👀☕</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-time">7:00 AM</div>
+          <div class="phone-notif">
+            <div class="notif-header"><div class="notif-dot"></div><span class="notif-app">You Glow Girl</span><span class="notif-time">now</span></div>
+            <div class="notif-msg">Good morning! Reminder that you're literally that girl. Even on days when it doesn't feel like it. Especially on those days. 💛</div>
+          </div>
+        </div>
+      </div>
+      <div class="phone phone-right">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-time">12:30 PM</div>
+          <div class="phone-notif">
+            <div class="notif-header"><div class="notif-dot"></div><span class="notif-app">You Glow Girl</span><span class="notif-time">now</span></div>
+            <div class="notif-msg">Hey. I know today's been a lot. You're allowed to just survive it. Tomorrow we go again. 🧡</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BFF SECTION -->
+  <section id="bff">
+    <div class="bff-inner">
+      <div class="bff-text">
+        <p class="section-label">Why You Glow Girl</p>
+        <h2 class="section-title">The BFF who shows up<br><em>no strings attached</em></h2>
+        <p>You know that friend who just gets you? Who sends a "thinking of you" at exactly the right moment, never makes you feel guilty for not texting back, and always tells you the truth with love?</p>
+        <p>That's us. Except we text you first, every single day, and we genuinely don't care if you respond. Zero pressure. All hype.</p>
+      </div>
+      <div class="bff-perks">
+        <div class="bff-perk">
+          <div class="bff-perk-icon">📱</div>
+          <div class="bff-perk-text">
+            <h4>No app to open</h4>
+            <p>She lands right in your messages. No downloads, no algorithms, no doom-scrolling required.</p>
+          </div>
+        </div>
+        <div class="bff-perk">
+          <div class="bff-perk-icon">🙅‍♀️</div>
+          <div class="bff-perk-text">
+            <h4>Zero guilt, zero obligation</h4>
+            <p>Read it and keep scrolling. Leave her on read. She'll be back tomorrow either way — no hard feelings.</p>
+          </div>
+        </div>
+        <div class="bff-perk">
+          <div class="bff-perk-icon">🎯</div>
+          <div class="bff-perk-text">
+            <h4>She actually knows you</h4>
+            <p>Messages are built around your real life — not some generic quote someone posted on Pinterest in 2014.</p>
+          </div>
+        </div>
+        <div class="bff-perk">
+          <div class="bff-perk-icon">🌸</div>
+          <div class="bff-perk-text">
+            <h4>For all of us</h4>
+            <p>Mom of four or no kids at all — you're here, and that's enough. Everyone deserves a hype woman.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="section-inner">
+      <p class="section-label">How it works</p>
+      <h2 class="section-title">So easy it's almost <em>too good.</em></h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <h3>Tell her about you</h3>
+          <p>Two minutes. Tell us your vibe, your life, what you're working on. She listens, she remembers, she shows up accordingly.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <h3>She writes just for you</h3>
+          <p>Not a mass blast. Not a horoscope. An actual message tailored to where you are right now in life.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <h3>It hits your texts</h3>
+          <p>No app. No login. Just a message in your inbox. Open it, ignore it, screenshot it — totally up to you.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <h3>Find your people IRL</h3>
+          <p>Upgrade to meet women in your city who get it too. Curated events, real connections, no awkward networking vibes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAMPLE MESSAGES (iMessage style) -->
+  <section id="messages">
+    <div class="section-inner">
+      <p class="section-label">Sample texts</p>
+      <h2 class="section-title">What she actually <em>sounds like.</em></h2>
+      <div class="message-showcase">
+
+        <div class="imessage-card">
+          <div class="imessage-header">
+            <div class="imessage-avatar">✨</div>
+            <div><div class="imessage-name">You Glow Girl</div><div class="imessage-subtitle">Mom life · 3 kids · Building a business</div></div>
+          </div>
+          <span class="msg-tag-chip">7:00 AM · Monday energy</span>
+          <div class="imessage-time">Today 7:00 AM</div>
+          <span class="bubble bubble-in">Good morning!! Quick check — did you actually sleep or did you lie there mentally scheduling tomorrow? Either way, you're up and that's a W. Let's get it. 💪</span>
+          <div class="bubble-reaction">❤️ You</div>
+        </div>
+
+        <div class="imessage-card">
+          <div class="imessage-header">
+            <div class="imessage-avatar">🌟</div>
+            <div><div class="imessage-name">You Glow Girl</div><div class="imessage-subtitle">No kids · Career growth · Newly single</div></div>
+          </div>
+          <span class="msg-tag-chip">7:00 AM · Wednesday check-in</span>
+          <div class="imessage-time">Today 7:00 AM</div>
+          <span class="bubble bubble-in">Okay real talk? That thing you've been putting off? It's not as scary as the version you've built up in your head. You have done harder things before breakfast. Go. 🧡</span>
+          <div class="bubble-reaction">🔥 You</div>
+        </div>
+
+        <div class="imessage-card">
+          <div class="imessage-header">
+            <div class="imessage-avatar">💛</div>
+            <div><div class="imessage-name">You Glow Girl</div><div class="imessage-subtitle">Single mom · Newborn · Daily peace</div></div>
+          </div>
+          <span class="msg-tag-chip">7:00 AM · Friday feels</span>
+          <div class="imessage-time">Today 7:00 AM</div>
+          <span class="bubble bubble-in">Hey. You're doing it on your own and that is genuinely one of the hardest things a person can do. I see you. The baby sees you. You're not just surviving — you're showing her what strong looks like. 🌷</span>
+          <div class="bubble-reaction">😭❤️ You</div>
+        </div>
+
+        <div class="imessage-card">
+          <div class="imessage-header">
+            <div class="imessage-avatar">🌺</div>
+            <div><div class="imessage-name">You Glow Girl</div><div class="imessage-subtitle">Married · Kids grown · Finding herself again</div></div>
+          </div>
+          <span class="msg-tag-chip">7:00 AM · Sunday reset</span>
+          <div class="imessage-time">Today 7:00 AM</div>
+          <span class="bubble bubble-in">This chapter of your life? Criminally underrated. You have put in the years, done the work, and now it's YOUR time. Don't shrink it. Don't apologize for it. You glowed up and you deserve to enjoy it. ✨</span>
+          <div class="bubble-reaction">🙌 You</div>
+        </div>
+
+        <div class="imessage-card">
+          <div class="imessage-header">
+            <div class="imessage-avatar">🧡</div>
+            <div><div class="imessage-name">You Glow Girl</div><div class="imessage-subtitle">Work-life balance · Fitness goals</div></div>
+          </div>
+          <span class="msg-tag-chip">7:00 AM · Thursday grind</span>
+          <div class="imessage-time">Today 7:00 AM</div>
+          <span class="bubble bubble-in">No pressure but… did you move your body yesterday? No judgment if not, I'm just your hype girl not your gym teacher 😂 But if you did — OKAY QUEEN. If you didn't — today's literally a fresh start. You got this! 💪</span>
+          <div class="bubble-reaction">😂❤️ You</div>
+        </div>
+
+        <div class="imessage-card">
+          <div class="imessage-header">
+            <div class="imessage-avatar">🌙</div>
+            <div><div class="imessage-name">You Glow Girl</div><div class="imessage-subtitle">Healing · Setting boundaries</div></div>
+          </div>
+          <span class="msg-tag-chip">7:00 AM · Gentle Tuesday</span>
+          <div class="imessage-time">Today 7:00 AM</div>
+          <span class="bubble bubble-in">Healing isn't linear and honestly it's not a straight line, it's more like… a plate of spaghetti. But you're still here, still trying. That's not small. That's everything. Be gentle with yourself today, okay? 🍝💛</span>
+          <div class="bubble-reaction">😭🙏 You</div>
+        </div>
+
+      </div>
+      <p style="text-align:center; margin-top:2rem; font-size:0.85rem; color:var(--light-muted); font-style:italic;">P.S. — You never have to text back. That's the whole point. 😌</p>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="section-inner">
+      <p class="section-label">Plans</p>
+      <h2 class="section-title">Simple. Two tiers. <em>No overthinking.</em></h2>
+      <p style="color:var(--muted); font-size:0.95rem; font-weight:300; max-width:520px; line-height:1.8; margin-bottom:0.75rem;">Start free forever — or lock in founding member pricing before it's gone. First 100 women only. Price locked for life.</p>
+
+      <!-- Founding member counter -->
+      <div style="display:inline-flex; align-items:center; gap:0.6rem; background:var(--blush); border:1px solid var(--peach); border-radius:100px; padding:0.45rem 1.1rem; margin-bottom:2.5rem;">
+        <span style="font-size:16px;">🔥</span>
+        <span style="font-size:0.82rem; font-weight:600; color:var(--deep-coral);" id="spots-label">73 of 100 founding member spots claimed</span>
+      </div>
+
+      <div class="pricing-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width:680px;">
+
+        <div class="plan">
+          <span class="plan-badge badge-spark">Free forever</span>
+          <p class="plan-name">Spark</p>
+          <p class="plan-tagline">Meet your new morning ritual</p>
+          <p class="plan-price">$0</p>
+          <p class="plan-annual" style="color:transparent; user-select:none;">—</p>
+          <hr class="plan-divider">
+          <ul class="plan-features">
+            <li>1 personalized morning text daily</li>
+            <li>Full profile setup (lifestyle, goals, vibe)</li>
+            <li>Tone selection — warm, bold, spiritual, real</li>
+            <li>No guilt ever — pause or stop anytime</li>
+          </ul>
+          <button class="plan-btn btn-outline" onclick="openModal()">Get started free ✨</button>
+        </div>
+
+        <div class="plan featured">
+          <span class="plan-badge badge-circle">Founding member — 100 only</span>
+          <p class="plan-name">Glow</p>
+          <p class="plan-tagline">Lock in your rate. Yours for life.</p>
+          <div style="display:flex; align-items:baseline; gap:0.6rem; margin-bottom:0.2rem;">
+            <p class="plan-price" style="color:#fff">$5<sub style="color:rgba(253,250,245,0.5)">/mo</sub></p>
+            <span style="font-size:0.85rem; color:rgba(253,250,245,0.45); text-decoration:line-through;">$11/mo</span>
+          </div>
+          <p class="plan-annual" style="color:var(--sage)">Price locked forever · Save 20% annually → $48/yr</p>
+          <hr class="plan-divider">
+          <ul class="plan-features">
+            <li>Everything in Spark</li>
+            <li>Up to 3 personalized texts per day</li>
+            <li>Custom delivery times — you pick when</li>
+            <li>Goal tracking &amp; monthly check-in texts</li>
+            <li>Founding member badge + insider status</li>
+            <li>Direct input on features we build next</li>
+            <li>First dibs when community events launch ✦</li>
+          </ul>
+          <button class="plan-btn btn-white" onclick="openModal('glow')">Claim my founding spot 🌸</button>
+          <p style="text-align:center; font-size:0.72rem; color:rgba(253,250,245,0.4); margin-top:0.75rem;">After 100 spots: $11/mo for new members</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BACKEND / TECH STACK SECTION -->
+  <section id="backend">
+    <div class="section-inner">
+      <p class="section-label" style="color:var(--violet)">Under the hood</p>
+      <h2 class="section-title" style="color:var(--ink)">What powers <em>the magic</em></h2>
+      <p style="color:var(--muted); max-width:560px; font-size:0.95rem; font-weight:300; margin-bottom:0.5rem; line-height:1.8;">Here's the full tech stack you'll need to take You Glow Girl from MVP to production — organized by function so you can build (or hire) in phases.</p>
+      <div class="backend-grid">
+        <div class="backend-card">
+          <div class="backend-icon">💬</div>
+          <h3>SMS Delivery</h3>
+          <p>Send and receive personalized texts to users at scheduled times. Handles opt-out (STOP), delivery receipts, and phone number verification.</p>
+          <span class="tech">Twilio Messaging API</span>
+        </div>
+        <div class="backend-card">
+          <div class="backend-icon">💳</div>
+          <h3>Payments & Subscriptions</h3>
+          <p>Manages recurring billing for the Glow founding member plan ($5/mo, locked for life) and future full-price tier ($11/mo), annual discount handling, and the gifting flow.</p>
+          <span class="tech">Stripe Billing + Stripe Checkout</span>
+        </div>
+        <div class="backend-card">
+          <div class="backend-icon">🧠</div>
+          <h3>AI Message Generation</h3>
+          <p>Generates personalized, on-brand messages by passing each user's profile (status, kids, goals, tone) into a prompt. Powers the "feels like your BFF" voice.</p>
+          <span class="tech">Claude API (claude-sonnet)</span>
+        </div>
+        <div class="backend-card">
+          <div class="backend-icon">⏰</div>
+          <h3>Message Scheduling</h3>
+          <p>Queues and triggers texts at the right time for each user's timezone. Supports Thrive users' custom delivery windows and multi-message days.</p>
+          <span class="tech">Inngest or AWS EventBridge</span>
+        </div>
+        <div class="backend-card">
+          <div class="backend-icon">🗄️</div>
+          <h3>User Database</h3>
+          <p>Stores user profiles, plan status, message history, preferences, and streak data. Scales cleanly as your user base grows.</p>
+          <span class="tech">Supabase (Postgres + Auth)</span>
+        </div>
+        <div class="backend-card">
+          <div class="backend-icon">🚀</div>
+          <h3>Backend API & Hosting</h3>
+          <p>Serverless functions to handle webhooks (Twilio, Stripe), user onboarding, and profile updates. Fast deploys, low cost at early scale.</p>
+          <span class="tech">Vercel + Next.js API Routes</span>
+        </div>
+        <div class="backend-card">
+          <div class="backend-icon">📊</div>
+          <h3>Analytics & Retention</h3>
+          <p>Tracks open rates, streak length, upgrade events, and churn. Helps you understand which message types convert free → paid users.</p>
+          <span class="tech">PostHog or Mixpanel</span>
+        </div>
+        <div class="backend-card">
+          <div class="backend-icon">📍</div>
+          <h3>Community Events (Circle+)</h3>
+          <p>Manages event listings by city, RSVPs, waitlists, and invite-only access. Powers the IRL community layer for Circle and Thrive members.</p>
+          <span class="tech">Custom admin + Luma API</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p class="footer-logo">You Glow Girl</p>
+    <p>Your BFF in a text. She shows up every day and never asks for anything back.<br>
+    <a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">SMS opt-out</a> · <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2048454c4c4f60594f55474c4f574749524c0e434f4d">[email&#160;protected]</a></p>
+    <p style="margin-top:0.75rem; font-size:0.72rem;">By signing up you agree to receive SMS messages. Reply STOP to unsubscribe at any time. Standard messaging rates may apply.</p>
+  </footer>
+</div>
+
+<!-- ═══════ DASHBOARD ═══════ -->
+<div id="screen-dashboard" class="screen">
+  <div class="dash-header">
+    <span class="dash-logo">You Glow Girl</span>
+    <span class="dash-plan-badge" id="dash-plan-label">Spark — Free</span>
+  </div>
+  <div class="dash-body">
+    <h1 class="dash-greeting">Hey <em id="dash-name">girl</em> ✨</h1>
+    <p class="dash-sub">Your morning text landed at 7:00 AM. Catch up with her below.</p>
+    <div class="dash-grid">
+      <div class="dash-card full">
+        <p class="dash-card-label">Today's message from your BFF</p>
+        <span class="today-bubble" id="dash-message">Good morning! Reminder that you're literally that girl. Even on days when it doesn't feel like it. Especially on those days. 💛</span>
+        <p class="today-meta">Delivered · 7:00 AM · Personalized just for you · No reply needed 😌</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-card-label">Your profile</p>
+        <ul class="profile-list" id="dash-profile-list">
+          <li>Status <span id="p-status">—</span></li>
+          <li>Kids <span id="p-kids">—</span></li>
+          <li>Focus <span id="p-focus">—</span></li>
+          <li>Tone <span id="p-tone">—</span></li>
+        </ul>
+      </div>
+      <div class="dash-card">
+        <p class="dash-card-label">Your streak 🔥</p>
+        <p style="font-family:var(--font-serif); font-size:1.7rem; font-weight:700; color:var(--ink);">7 days</p>
+        <div class="streak-row" id="streak-row"></div>
+        <p class="streak-label">She's been showing up for you all week. 💛</p>
+      </div>
+    </div>
+    <div class="upgrade-banner" id="upgrade-banner">
+      <div class="upgrade-text">
+        <h3>Only a few founding spots left.</h3>
+        <p>Lock in $5/mo forever before all 100 are claimed. After that, Glow goes to $11/mo for new members.</p>
+      </div>
+      <button class="btn-upgrade" onclick="showUpgradeModal()">Claim my founding spot 🔥</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ONBOARDING MODAL ═══════ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="progress-dots" id="progress-dots"></div>
+
+    <!-- Step 1 -->
+    <div class="modal-step active" id="step-1">
+      <p class="modal-eyebrow">Step 1 of 4</p>
+      <h2>Hey girl, let's get you set up. 👋</h2>
+      <p class="sub">Two minutes and she's yours. Tell us a little about you so she sounds like she actually knows you.</p>
+      <div class="form-group">
+        <label class="form-label">Your first name</label>
+        <input class="form-input" type="text" id="input-name" placeholder="What should she call you?" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Your mobile number</label>
+        <input class="form-input" type="tel" id="input-phone" placeholder="(312) 555-0100" />
+      </div>
+      <p style="font-size:0.75rem; color:var(--light-muted); margin-top:-0.5rem; font-style:italic;">Reply STOP anytime to unsubscribe. No hard feelings — we'll still be rooting for you.</p>
+      <div class="modal-footer">
+        <button class="modal-next" onclick="nextStep(2)">Let's go → ✨</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="modal-step" id="step-2">
+      <p class="modal-eyebrow">Step 2 of 4</p>
+      <h2>Tell her about your life. 💛</h2>
+      <p class="sub">The more she knows, the more it feels like she really gets you.</p>
+      <div class="form-group">
+        <label class="form-label">Relationship status</label>
+        <div class="pill-group" id="pills-status">
+          <span class="pill" data-group="status">Single</span>
+          <span class="pill" data-group="status">In a relationship</span>
+          <span class="pill" data-group="status">Married</span>
+          <span class="pill" data-group="status">Divorced / co-parenting</span>
+          <span class="pill" data-group="status">It's complicated 😅</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kids situation</label>
+        <div class="pill-group" id="pills-kids">
+          <span class="pill" data-group="kids">No kids</span>
+          <span class="pill" data-group="kids">Expecting</span>
+          <span class="pill" data-group="kids">1 kid</span>
+          <span class="pill" data-group="kids">2–3 kids</span>
+          <span class="pill" data-group="kids">4+ kids (hero 👑)</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Youngest kid's stage (if applicable)</label>
+        <div class="pill-group" id="pills-stage">
+          <span class="pill" data-group="stage">Newborn</span>
+          <span class="pill" data-group="stage">Toddler</span>
+          <span class="pill" data-group="stage">Elementary</span>
+          <span class="pill" data-group="stage">Teen</span>
+          <span class="pill" data-group="stage">Adult kids</span>
+          <span class="pill" data-group="stage">N/A</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-back" onclick="nextStep(1)">← Back</button>
+        <button class="modal-next" onclick="nextStep(3)">Keep going →</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="modal-step" id="step-3">
+      <p class="modal-eyebrow">Step 3 of 4</p>
+      <h2>What are you working on? 🎯</h2>
+      <p class="sub">Pick everything that feels true right now. This is between you and her.</p>
+      <div class="form-group">
+        <label class="form-label">Current goals <span style="color:var(--light-muted); font-weight:300">(pick as many as you want)</span></label>
+        <div class="pill-group" id="pills-goals">
+          <span class="pill multi" data-group="goals">More confidence</span>
+          <span class="pill multi" data-group="goals">Work-life balance</span>
+          <span class="pill multi" data-group="goals">Building a business</span>
+          <span class="pill multi" data-group="goals">Fitness &amp; health</span>
+          <span class="pill multi" data-group="goals">Better relationships</span>
+          <span class="pill multi" data-group="goals">Healing &amp; recovery</span>
+          <span class="pill multi" data-group="goals">Career growth</span>
+          <span class="pill multi" data-group="goals">Daily peace of mind</span>
+          <span class="pill multi" data-group="goals">Finding myself again</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Her vibe</label>
+        <div class="pill-group" id="pills-tone">
+          <span class="pill" data-group="tone">Warm &amp; gentle 🤍</span>
+          <span class="pill" data-group="tone">Bold &amp; direct 🔥</span>
+          <span class="pill" data-group="tone">Spiritual &amp; grounded 🙏</span>
+          <span class="pill" data-group="tone">Funny &amp; real 😂</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-back" onclick="nextStep(2)">← Back</button>
+        <button class="modal-next" onclick="nextStep(4)">Almost there →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Plan -->
+    <div class="modal-step" id="step-4">
+      <p class="modal-eyebrow">Step 4 of 4</p>
+      <h2>Pick your plan. 🌸</h2>
+      <p class="sub">Start free forever, or lock in your founding member rate — first 100 spots only, price locked for life.</p>
+
+      <div style="display:inline-flex; align-items:center; gap:0.5rem; background:var(--blush); border-radius:100px; padding:0.35rem 0.9rem; margin-bottom:1.25rem;">
+        <span style="font-size:13px;">🔥</span>
+        <span style="font-size:0.75rem; font-weight:600; color:var(--deep-coral);" id="modal-spots-label">73 of 100 founding spots claimed</span>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1rem;">
+        <label style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; border:1.5px solid var(--border); border-radius:14px; cursor:pointer;">
+          <input type="radio" name="plan" value="spark" style="margin-top:3px; accent-color:var(--coral);" checked>
+          <div>
+            <p style="font-weight:600; font-size:0.9rem; color:var(--ink);">Spark — Free forever</p>
+            <p style="font-size:0.8rem; color:var(--muted); font-weight:300;">1 morning text, built around your life. Always free.</p>
+          </div>
+        </label>
+        <label style="display:flex; gap:1rem; align-items:flex-start; padding:1rem; border:2px solid var(--coral); border-radius:14px; cursor:pointer; background:var(--blush);">
+          <input type="radio" name="plan" value="glow" style="margin-top:3px; accent-color:var(--coral);">
+          <div>
+            <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.2rem;">
+              <p style="font-weight:600; font-size:0.9rem; color:var(--ink);">Glow — $5/mo</p>
+              <span style="font-size:0.72rem; font-weight:600; color:var(--deep-coral); background:rgba(232,113,74,0.15); padding:2px 8px; border-radius:100px;">Founding member ✦</span>
+              <span style="font-size:0.78rem; color:var(--muted); text-decoration:line-through;">$11/mo</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--muted); font-weight:300;">Up to 3 texts/day · custom timing · goal tracking · first dibs on events. Price locked forever.</p>
+          </div>
+        </label>
+      </div>
+      <p style="font-size:0.72rem; color:var(--light-muted); font-style:italic; margin-bottom:0.5rem;">After 100 founding spots: Glow becomes $11/mo for new members. Yours stays $5 forever.</p>
+      <div class="modal-footer">
+        <button class="modal-back" onclick="nextStep(3)">← Back</button>
+        <button class="modal-next" onclick="completeOnboarding()">Meet your BFF → 🎉</button>
+      </div>
+    </div>
+
+    <!-- Confirmation -->
+    <div class="modal-step" id="step-confirm">
+      <div style="text-align:center;">
+        <div class="confirm-icon">🎉</div>
+        <h2 style="text-align:center;">She's officially yours. ✨</h2>
+        <p class="sub" style="text-align:center;">Your first text drops tomorrow at 7:00 AM. And you don't have to respond — that's the whole beautiful point.</p>
+        <div class="confirm-preview">
+          <p class="preview-label">A preview of what's coming 👀</p>
+          <span class="preview-bubble" id="preview-msg">Good morning! Reminder that you're literally that girl. Even on the days it doesn't feel like it. We're glad you're here. 💛</span>
+        </div>
+        <button class="modal-next" style="width:100%; margin-top:0.5rem;" onclick="goToDashboard()">Go to my dashboard 🌸</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const state = { name:'', phone:'', status:'', kids:'', stage:'', goals:[], tone:'', plan:'spark' };
+  let currentStep = 1; const totalSteps = 4;
+
+  function scrollTo(id) { document.querySelector(id)?.scrollIntoView({ behavior:'smooth' }); }
+
+  function openModal(plan) {
+    if (plan) { const r = document.querySelector(`input[value="${plan}"]`); if (r) r.checked = true; }
+    document.getElementById('modal-overlay').classList.add('open');
+    renderDots();
+  }
+  function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+  document.getElementById('modal-overlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+
+  function renderDots() {
+    const el = document.getElementById('progress-dots'); el.innerHTML = '';
+    for (let i = 1; i <= totalSteps; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i <= currentStep ? ' active' : '');
+      el.appendChild(d);
+    }
+  }
+
+  function nextStep(n) {
+    document.querySelectorAll('.modal-step').forEach(s => s.classList.remove('active'));
+    (document.getElementById('step-'+n) || document.getElementById('step-confirm'))?.classList.add('active');
+    currentStep = Math.min(n, totalSteps);
+    renderDots();
+    document.getElementById('modal').scrollTop = 0;
+  }
+
+  document.querySelectorAll('.pill').forEach(pill => {
+    pill.addEventListener('click', function() {
+      const group = this.dataset.group, isMulti = this.classList.contains('multi');
+      if (!isMulti) document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('selected'));
+      this.classList.toggle('selected');
+    });
+  });
+
+  function getSelected(group) {
+    return [...document.querySelectorAll(`.pill[data-group="${group}"].selected`)].map(p => p.textContent.trim());
+  }
+
+  function completeOnboarding() {
+    state.name = document.getElementById('input-name').value.trim() || 'girl';
+    state.phone = document.getElementById('input-phone').value.trim();
+    state.status = getSelected('status')[0] || 'Not specified';
+    state.kids = getSelected('kids')[0] || 'Not specified';
+    state.stage = getSelected('stage')[0] || 'N/A';
+    state.goals = getSelected('goals');
+    state.tone = getSelected('tone')[0] || 'Warm & gentle 🤍';
+    state.plan = document.querySelector('input[name="plan"]:checked')?.value || 'spark';
+
+    const previews = {
+      spark: 'Good morning! Reminder that you\'re literally that girl. Even on the days it doesn\'t feel like it. We\'re glad you\'re here. 💛',
+      glow: 'Okay founding member — you\'re officially one of the first 100. Your texts start tomorrow, your rate is locked forever, and we are SO glad you\'re here. Let\'s go. 🌸🔥'
+    };
+    document.getElementById('preview-msg').textContent = previews[state.plan];
+    nextStep(99);
+  }
+
+  function goToDashboard() {
+    closeModal();
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-dashboard').classList.add('active');
+    window.scrollTo(0,0);
+
+    document.getElementById('dash-name').textContent = state.name;
+    const planLabels = { spark:'Spark — Free', glow:'Glow — Founding Member ✦' };
+    document.getElementById('dash-plan-label').textContent = planLabels[state.plan];
+    if (state.plan === 'glow') document.getElementById('dash-plan-label').classList.add('founding');
+    document.getElementById('p-status').textContent = state.status;
+    document.getElementById('p-kids').textContent = state.kids;
+    document.getElementById('p-focus').textContent = state.goals.length ? state.goals.slice(0,2).join(', ') : '—';
+    document.getElementById('p-tone').textContent = state.tone;
+
+    const toneKey = state.tone || '';
+    const msgs = {
+      'Bold': 'You didn\'t come this far to shrink now. You\'ve got this — go get every single thing you came for. 💪🔥',
+      'Spiritual': 'You were made for more than you can see from where you\'re standing right now. Trust what\'s being written for you. 🙏✨',
+      'Funny': 'Good morning!! Your coffee is getting cold and your potential is going untapped. Fix one of those right now. 😂☕',
+      'default': 'Good morning! Reminder that you\'re literally that girl. Even on days when it doesn\'t feel like it. Especially on those days. 💛'
+    };
+    let msg = msgs.default;
+    if (toneKey.includes('Bold')) msg = msgs['Bold'];
+    else if (toneKey.includes('Spiritual')) msg = msgs['Spiritual'];
+    else if (toneKey.includes('Funny')) msg = msgs['Funny'];
+    document.getElementById('dash-message').textContent = msg;
+
+    const row = document.getElementById('streak-row');
+    for (let i = 0; i < 7; i++) {
+      const d = document.createElement('div');
+      d.className = 'streak-day done';
+      row.append(d);
+    }
+
+    if (state.plan !== 'spark') document.getElementById('upgrade-banner').style.display = 'none';
+  }
+
+  function showUpgradeModal() { openModal('glow'); nextStep(4); }
+  renderDots();
+</script>
+</body>
+</html>
