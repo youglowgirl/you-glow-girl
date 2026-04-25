@@ -1,24 +1,30 @@
-// pages/api/subscribe.js
-// Vercel serverless function — receives subscriber data from the YGG onboarding
-// quiz and forwards it to EmailOctopus from the server side (no CORS issues).
-
 const EO_API_KEY = process.env.EO_API_KEY;
 const EO_LIST_ID = process.env.EO_LIST_ID;
 
 export default async function handler(req, res) {
-  // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { email, name, plan, tone, goals } = req.body;
+  // Debug: check env vars are present
+  if (!EO_API_KEY) {
+    console.error('Missing EO_API_KEY environment variable');
+    return res.status(500).json({ error: 'Server configuration error: missing API key' });
+  }
+  if (!EO_LIST_ID) {
+    console.error('Missing EO_LIST_ID environment variable');
+    return res.status(500).json({ error: 'Server configuration error: missing list ID' });
+  }
 
-  // Basic validation — email is required
+  const { email, name, phone, plan, tone, goals } = req.body;
+
   if (!email || !email.includes('@')) {
     return res.status(400).json({ error: 'Valid email address is required' });
   }
 
   try {
+    console.log(`Subscribing ${email} to list ${EO_LIST_ID}`);
+
     const response = await fetch(
       `https://emailoctopus.com/api/1.6/lists/${EO_LIST_ID}/contacts`,
       {
@@ -29,6 +35,7 @@ export default async function handler(req, res) {
           email_address: email,
           fields: {
             FirstName: name || '',
+            Phone: phone || '',
             Plan: plan || 'spark',
             Tone: tone || '',
             Goals: Array.isArray(goals) ? goals.join(', ') : (goals || ''),
@@ -39,23 +46,21 @@ export default async function handler(req, res) {
     );
 
     const data = await response.json();
+    console.log('EmailOctopus response:', JSON.stringify(data));
 
-    // EmailOctopus returns 200 on success
     if (response.ok) {
       return res.status(200).json({ success: true });
     }
 
-    // Handle duplicate subscriber gracefully — not an error for us
     if (data?.error?.code === 'MEMBER_EXISTS_WITH_EMAIL_ADDRESS') {
       return res.status(200).json({ success: true, note: 'already subscribed' });
     }
 
-    // Any other EmailOctopus error
-    console.error('EmailOctopus error:', data);
-    return res.status(500).json({ error: 'Failed to subscribe' });
+    console.error('EmailOctopus error:', JSON.stringify(data));
+    return res.status(500).json({ error: 'Failed to subscribe', details: data });
 
   } catch (err) {
-    console.error('Subscribe function error:', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('Subscribe function error:', err.message);
+    return res.status(500).json({ error: 'Internal server error', message: err.message });
   }
 }
