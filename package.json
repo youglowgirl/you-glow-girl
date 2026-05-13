@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start"
   },
-  "dependencies": {
+ "dependencies": {
     "next": "15.3.6",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "stripe": "^14.0.0"
   }
-}
