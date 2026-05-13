@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YGG — Message Generator Test</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: #1C1410; color: #FDF9F4; min-height: 100vh; padding: 2rem; }
+.wrap { max-width: 640px; margin: 0 auto; }
+.logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-style: italic; font-weight: 700; background: linear-gradient(135deg, #E8714A, #E8A830); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.25rem; }
+h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 400; color: #FDF9F4; margin-bottom: 0.4rem; }
+.sub { font-size: 0.85rem; color: rgba(253,249,244,0.5); margin-bottom: 2rem; font-weight: 300; }
+.card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 1.5rem; margin-bottom: 1.25rem; }
+.card-title { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #E8714A; margin-bottom: 1rem; }
+.form-group { margin-bottom: 1rem; }
+label { display: block; font-size: 0.8rem; font-weight: 500; color: rgba(253,249,244,0.7); margin-bottom: 0.4rem; }
+input, select { width: 100%; padding: 0.65rem 0.9rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #FDF9F4; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem; outline: none; }
+input:focus, select:focus { border-color: #E8714A; }
+select option { background: #2E1F17; color: #FDF9F4; }
+.goals-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.goal-pill { padding: 0.35rem 0.85rem; border-radius: 100px; font-size: 0.75rem; font-weight: 500; border: 1px solid rgba(255,255,255,0.2); color: rgba(253,249,244,0.6); cursor: pointer; transition: all 0.15s; user-select: none; }
+.goal-pill.selected { background: #E8714A; color: #fff; border-color: #E8714A; }
+.btn { width: 100%; padding: 0.9rem; background: linear-gradient(135deg, #E8714A, #C4512E); color: #fff; border: none; border-radius: 100px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: opacity 0.2s; margin-top: 0.5rem; }
+.btn:hover { opacity: 0.9; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.result { display: none; background: rgba(255,255,255,0.05); border: 1px solid rgba(232,113,74,0.3); border-radius: 16px; padding: 1.5rem; margin-top: 1.25rem; }
+.result.show { display: block; }
+.result-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #E8714A; margin-bottom: 0.75rem; }
+.bubble { background: #E9E9EB; color: #1C1C1E; border-radius: 18px; border-bottom-left-radius: 3px; padding: 14px 18px; font-size: 0.95rem; line-height: 1.6; display: inline-block; max-width: 100%; }
+.error { color: #FF6B6B; font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+.error.show { display: block; }
+.loading { text-align: center; color: rgba(253,249,244,0.5); font-size: 0.85rem; font-style: italic; display: none; }
+.loading.show { display: block; }
+.try-again { margin-top: 1rem; text-align: center; }
+.try-again button { background: none; border: 1px solid rgba(255,255,255,0.2); color: rgba(253,249,244,0.6); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.82rem; padding: 0.5rem 1.2rem; border-radius: 100px; cursor: pointer; transition: all 0.15s; }
+.try-again button:hover { border-color: #E8714A; color: #E8714A; }
+.meta { font-size: 0.75rem; color: rgba(253,249,244,0.35); margin-top: 0.75rem; font-weight: 300; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="logo">You Glow Girl</p>
+  <h1>Message Generator Test</h1>
+  <p class="sub">Test your Claude API integration — fill in a profile and generate a personalized message.</p>
+
+  <div class="card">
+    <p class="card-title">Subscriber profile</p>
+
+    <div class="form-group">
+      <label>First name</label>
+      <input type="text" id="name" placeholder="e.g. Jordan" value="Jordan" />
+    </div>
+
+    <div class="form-group">
+      <label>Tone preference</label>
+      <select id="tone">
+        <option value="Warm &amp; gentle 🤍">Warm &amp; gentle 🤍</option>
+        <option value="Bold &amp; direct 🔥">Bold &amp; direct 🔥</option>
+        <option value="Spiritual &amp; grounded 🙏">Spiritual &amp; grounded 🙏</option>
+        <option value="Funny &amp; real 😂">Funny &amp; real 😂</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Relationship status</label>
+      <select id="relationship_status">
+        <option>Single</option>
+        <option>In a relationship</option>
+        <option selected>Married</option>
+        <option>Divorced / co-parenting</option>
+        <option>It's complicated 😅</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Kids</label>
+      <select id="kids">
+        <option>No kids</option>
+        <option>Expecting</option>
+        <option>1 kid</option>
+        <option selected>2–3 kids</option>
+        <option>4+ kids (hero 👑)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Life stage of youngest</label>
+      <select id="life_stage">
+        <option>Newborn</option>
+        <option selected>Toddler</option>
+        <option>Elementary</option>
+        <option>Teen</option>
+        <option>Adult kids</option>
+        <option>N/A</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Goals <span style="color:rgba(253,249,244,0.4); font-weight:300">(tap to select)</span></label>
+      <div class="goals-wrap" id="goals-wrap">
+        <span class="goal-pill selected" onclick="toggleGoal(this)">More confidence</span>
+        <span class="goal-pill selected" onclick="toggleGoal(this)">Work-life balance</span>
+        <span class="goal-pill" onclick="toggleGoal(this)">Building a business</span>
+        <span class="goal-pill" onclick="toggleGoal(this)">Fitness &amp; health</span>
+        <span class="goal-pill" onclick="toggleGoal(this)">Better relationships</span>
+        <span class="goal-pill" onclick="toggleGoal(this)">Healing &amp; recovery</span>
+        <span class="goal-pill" onclick="toggleGoal(this)">Career growth</span>
+        <span class="goal-pill selected" onclick="toggleGoal(this)">Daily peace of mind</span>
+        <span class="goal-pill" onclick="toggleGoal(this)">Finding myself again</span>
+      </div>
+    </div>
+
+    <button class="btn" onclick="generateMessage()" id="gen-btn">Generate message ✦</button>
+  </div>
+
+  <div class="loading" id="loading">She's writing your message... 🌸</div>
+  <div class="error" id="error"></div>
+
+  <div class="result" id="result">
+    <p class="result-label">Today's message</p>
+    <span class="bubble" id="message-output"></span>
+    <p class="meta" id="message-meta"></p>
+    <div class="try-again">
+      <button onclick="generateMessage()">Generate another ↺</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggleGoal(el) {
+  el.classList.toggle('selected');
+}
+
+async function generateMessage() {
+  const name = document.getElementById('name').value.trim() || 'friend';
+  const tone = document.getElementById('tone').value;
+  const relationship_status = document.getElementById('relationship_status').value;
+  const kids = document.getElementById('kids').value;
+  const life_stage = document.getElementById('life_stage').value;
+  const goals = [...document.querySelectorAll('.goal-pill.selected')].map(p => p.textContent.trim());
+
+  const btn = document.getElementById('gen-btn');
+  const loading = document.getElementById('loading');
+  const result = document.getElementById('result');
+  const error = document.getElementById('error');
+  const output = document.getElementById('message-output');
+  const meta = document.getElementById('message-meta');
+
+  // Reset UI
+  btn.disabled = true;
+  result.classList.remove('show');
+  error.classList.remove('show');
+  loading.classList.add('show');
+
+  try {
+    const start = Date.now();
+    const response = await fetch('/api/generate-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, tone, relationship_status, kids, life_stage, goals })
+    });
+
+    const data = await response.json();
+    const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+
+    if (!response.ok || !data.message) {
+      throw new Error(data.error || 'No message returned');
+    }
+
+    output.textContent = data.message;
+    meta.textContent = `Generated in ${elapsed}s · Claude Haiku · ${goals.length} goals · ${tone}`;
+    result.classList.add('show');
+
+  } catch (err) {
+    error.textContent = `Error: ${err.message}. Check that your ANTHROPIC_API_KEY is set correctly in Vercel.`;
+    error.classList.add('show');
+  } finally {
+    btn.disabled = false;
+    loading.classList.remove('show');
+  }
+}
+</script>
+</body>
+</html>
