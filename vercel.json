@@ -3,6 +3,8 @@
     { "source": "/api/subscribe", "destination": "/api/subscribe" },
     { "source": "/api/webhook", "destination": "/api/webhook" },
     { "source": "/api/generate-message", "destination": "/api/generate-message" },
+    { "source": "/api/sms-inbound", "destination": "/api/sms-inbound" },
+    { "source": "/api/customer-portal", "destination": "/api/customer-portal" },
     { "source": "/privacy", "destination": "/privacy.html" },
     { "source": "/terms", "destination": "/terms.html" },
     { "source": "/(.*)", "destination": "/index-static.html" }
