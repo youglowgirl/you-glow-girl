@@ -1,42 +1,29 @@
 // pages/api/inngest.js
-// Inngest API route for Next.js Pages Router
-// Serves all YGG scheduled functions to Inngest
-
 import { serve } from 'inngest/next';
 import { Inngest } from 'inngest';
 import { createClient } from '@supabase/supabase-js';
 
-// ── Inngest client ─────────────────────────────────────────────────────────
 const inngest = new Inngest({ id: 'you-glow-girl' });
 
-// ── Supabase client ────────────────────────────────────────────────────────
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
-);
+// Lazy Supabase client — created when called, not at module load
+function getSupabase() {
+  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+}
 
-// ══════════════════════════════════════════════════════════════════════════
-// FUNCTION 1: Daily Morning Message Scheduler
-// Runs every day at 7:00 AM Central Time (13:00 UTC)
-// ══════════════════════════════════════════════════════════════════════════
+// ── FUNCTION 1: Daily Morning Messages (7am Central = 13:00 UTC) ──────────
 const dailyMessageScheduler = inngest.createFunction(
-  {
-    id: 'daily-morning-messages',
-    name: 'Daily Morning Messages',
-  },
+  { id: 'daily-morning-messages', name: 'Daily Morning Messages' },
   { cron: '0 13 * * *' },
   async ({ step, logger }) => {
     logger.info('Starting daily message run...');
 
-    // Step 1: Fetch all active users
     const users = await step.run('fetch-active-users', async () => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('users')
         .select('id, name, email, phone, plan, tone, goals, relationship_status, kids, life_stage, texts_per_day, streak_count')
         .eq('status', 'active')
         .not('phone', 'is', null)
         .neq('phone', '');
-
       if (error) throw new Error(`Failed to fetch users: ${error.message}`);
       logger.info(`Found ${data.length} active users`);
       return data;
@@ -47,7 +34,6 @@ const dailyMessageScheduler = inngest.createFunction(
       return { sent: 0 };
     }
 
-    // Step 2: Send messages in batches of 10
     const results = { sent: 0, failed: 0 };
     const batchSize = 10;
 
@@ -69,20 +55,15 @@ const dailyMessageScheduler = inngest.createFunction(
   }
 );
 
-// ══════════════════════════════════════════════════════════════════════════
-// FUNCTION 2: Send single message on demand (for testing)
-// ══════════════════════════════════════════════════════════════════════════
+// ── FUNCTION 2: Send single message on demand (testing) ───────────────────
 const sendSingleMessage = inngest.createFunction(
-  {
-    id: 'send-single-message',
-    name: 'Send Single Message',
-  },
+  { id: 'send-single-message', name: 'Send Single Message' },
   { event: 'ygg/message.send' },
   async ({ event, step, logger }) => {
     const { userId } = event.data;
 
     const user = await step.run('fetch-user', async () => {
-      const { data, error } = await supabase
+      const { data, error } = await getSupabase()
         .from('users')
         .select('id, name, email, phone, plan, tone, goals, relationship_status, kids, life_stage, texts_per_day, streak_count')
         .eq('id', userId)
@@ -99,9 +80,7 @@ const sendSingleMessage = inngest.createFunction(
   }
 );
 
-// ══════════════════════════════════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════════════════════════════════
+// ── HELPERS ───────────────────────────────────────────────────────────────
 async function sendMessageToUser(user, logger) {
   const message = await generateMessage(user);
   if (!message) throw new Error('No message generated');
@@ -195,21 +174,21 @@ async function sendSMS(toPhone, message) {
 }
 
 async function logMessage(userId, messageText, twilioSid) {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('messages')
     .insert({ user_id: userId, message_text: messageText, delivered: true, twilio_sid: twilioSid || null });
   if (error) console.error('Failed to log message:', error.message);
 }
 
 async function updateUserAfterSend(userId, currentStreak) {
-  const { error } = await supabase
+  const { error } = await getSupabase()
     .from('users')
     .update({ last_text_sent: new Date().toISOString(), streak_count: (currentStreak || 0) + 1 })
     .eq('id', userId);
   if (error) console.error('Failed to update user:', error.message);
 }
 
-// ── Serve handler — Pages Router syntax ───────────────────────────────────
+// ── Serve ─────────────────────────────────────────────────────────────────
 export default serve({
   client: inngest,
   functions: [dailyMessageScheduler, sendSingleMessage],
