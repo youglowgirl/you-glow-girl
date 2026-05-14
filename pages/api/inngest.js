@@ -9,7 +9,6 @@ import { createClient } from '@supabase/supabase-js';
 // ── Inngest client ────────────────────────────────────────────────────────────
 export const inngest = new Inngest({
   id: 'you-glow-girl',
-  signingKey: process.env.INNGEST_SIGNING_KEY,
 });
 
 // ── Supabase client ───────────────────────────────────────────────────────────
@@ -275,10 +274,19 @@ async function updateUserAfterSend(userId, currentStreak) {
 }
 
 // ── Serve Inngest functions ───────────────────────────────────────────────────
-export default serve({
+const handler = serve({
   client: inngest,
   functions: [
     dailyMessageScheduler,
     sendSingleMessage,
   ],
 });
+
+export default handler;
+
+// Required for Pages Router — disable body parsing so Inngest can read raw body
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
