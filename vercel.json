@@ -1,13 +1,20 @@
 {
   "rewrites": [
-    { "source": "/api/subscribe", "destination": "/api/subscribe" },
-    { "source": "/api/webhook", "destination": "/api/webhook" },
-    { "source": "/api/generate-message", "destination": "/api/generate-message" },
-    { "source": "/api/sms-inbound", "destination": "/api/sms-inbound" },
-    { "source": "/api/customer-portal", "destination": "/api/customer-portal" },
-    { "source": "/api/inngest", "destination": "/api/inngest" },
-    { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/(.*)", "destination": "/index-static.html" }
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index-static.html"
+    }
   ]
 }
